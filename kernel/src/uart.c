@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#define BUF_SIZE 256
+#define BUF_SIZE 4096
 
 uint64_t UART_BASE;
 
@@ -21,12 +21,13 @@ int tx_is_empty(){
 }
 
 void uart_tx_bottom_half(){
-    while(tx_buf.head != tx_buf.tail){
+    if(tx_buf.head != tx_buf.tail){
         char c = tx_buf.data[tx_buf.tail];
         tx_buf.tail = (tx_buf.tail + 1) % BUF_SIZE;
         *UART_THR = c; 
+    }else{
+        *UART_IER &= ~0x02;
     }
-    *UART_IER &= ~0x02;
 }
 
 void uart_trap_handler(){

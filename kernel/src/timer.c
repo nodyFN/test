@@ -23,10 +23,11 @@ void enable_timer_interrupt(){
 int get_time_after_boot(){
     uint64_t current_time = get_time();
     uint64_t seconds_after_boot = current_time / TIMERBASE_FREQ;
+    return seconds_after_boot;
 }
 
 void periodic_tick_handler(){
-    printf("Tick! %d seconds after booting.\n", get_time_after_boot());
+    // printf("Tick! %d seconds after booting.\n", get_time_after_boot());
     add_timer(periodic_tick_handler, NULL, PERIODIC_TIME_SLOT_SECOND);
 }
 

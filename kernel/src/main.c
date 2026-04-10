@@ -8,11 +8,13 @@
 #include "task.h"
 #include "timer.h"
 #include "plic.h"
+#include "task.h"
 
 struct KernelInfo kernel_info;
 void irq_enable() {
     asm volatile("csrsi sstatus, (1 << 1)");
 }
+
 void main(uint64_t hartid, void *dtb) {
     uart_init(dtb);
 
@@ -26,8 +28,6 @@ void main(uint64_t hartid, void *dtb) {
     task_init();
     timer_init();
     plic_init();
-    // __asm__ volatile("csrw sscratch, zero");
-    // __asm__ volatile("csrs sstatus, %0" : : "r"(1 << 1));
     irq_enable();
     int32_t pid = 1;
 
